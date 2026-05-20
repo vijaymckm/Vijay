@@ -2,66 +2,10 @@
 
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useRef } from "react";
-import {
-  Sparkles,
-  MonitorSmartphone,
-  Film,
-  Megaphone,
-  Code2,
-  Building2,
-  ArrowUpRight,
-} from "lucide-react";
-
-const services = [
-  {
-    icon: Sparkles,
-    title: "Branding",
-    body: "Identity systems, naming, visual languages and brand films designed to resonate at any scale.",
-    tags: ["Logo", "Identity", "Strategy"],
-    accent: "from-cyanglow/30 to-bluepulse/0",
-    glow: "rgba(125,249,255,0.55)",
-  },
-  {
-    icon: MonitorSmartphone,
-    title: "Web Design",
-    body: "Cinematic websites engineered with shaders, choreography, and a relentless attention to craft.",
-    tags: ["UX", "UI", "WebGL"],
-    accent: "from-bluepulse/30 to-violet/0",
-    glow: "rgba(59,130,246,0.55)",
-  },
-  {
-    icon: Film,
-    title: "Motion Graphics",
-    body: "Frame-by-frame storytelling — title sequences, brand films, and interactive motion systems.",
-    tags: ["Film", "3D", "AE"],
-    accent: "from-violet/30 to-cyanglow/0",
-    glow: "rgba(139,92,246,0.55)",
-  },
-  {
-    icon: Megaphone,
-    title: "Digital Marketing",
-    body: "Content engines, paid creative, and performance systems that turn campaigns into culture.",
-    tags: ["Performance", "Content", "Strategy"],
-    accent: "from-cyanglow/25 to-violet/0",
-    glow: "rgba(125,249,255,0.5)",
-  },
-  {
-    icon: Code2,
-    title: "Creative Development",
-    body: "Custom WebGL, generative graphics, real-time interaction and bespoke creative tooling.",
-    tags: ["R3F", "GLSL", "GSAP"],
-    accent: "from-bluepulse/35 to-cyanglow/0",
-    glow: "rgba(59,130,246,0.6)",
-  },
-  {
-    icon: Building2,
-    title: "Studio Rental",
-    body: "Cinematic stages with cyc walls, motion control, LED volumes and a full creative crew on call.",
-    tags: ["Stage", "Crew", "Gear"],
-    accent: "from-violet/30 to-bluepulse/0",
-    glow: "rgba(139,92,246,0.55)",
-  },
-];
+import { ArrowUpRight } from "lucide-react";
+import { services } from "@/lib/content";
+import { RichText } from "@/lib/richText";
+import { getIcon } from "@/lib/icons";
 
 export default function Services() {
   return (
@@ -76,24 +20,23 @@ export default function Services() {
             <div className="mb-6 flex items-center gap-3">
               <span className="h-px w-12 bg-cyanglow" />
               <span className="text-xs uppercase tracking-[0.5em] text-cyanglow">
-                02 — Services
+                {services.sectionNumber} — {services.sectionLabel}
               </span>
             </div>
             <h2 className="font-display text-5xl font-medium leading-[0.95] tracking-ultratight md:text-7xl">
-              Six disciplines.<br />
-              <span className="gradient-text italic">One choreography.</span>
+              {services.heading.line1}
+              <br />
+              <RichText text={services.heading.line2Rich} />
             </h2>
           </div>
           <p className="font-cabinet text-base leading-relaxed text-white/60 md:col-span-5 md:col-start-8 md:text-lg">
-            From the first conceptual spark to the final pixel, every
-            discipline at JAS Studios moves in sync — composed by directors,
-            choreographed by designers, shipped by engineers.
+            {services.description}
           </p>
         </div>
 
         {/* Cards */}
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {services.map((s, i) => (
+          {services.items.map((s, i) => (
             <ServiceCard key={s.title} index={i} {...s} />
           ))}
         </div>
@@ -102,8 +45,9 @@ export default function Services() {
   );
 }
 
-function ServiceCard({ icon: Icon, title, body, tags, accent, glow, index }) {
+function ServiceCard({ icon, title, body, tags, accent, glow, index }) {
   const ref = useRef(null);
+  const Icon = getIcon(icon);
 
   // Tilt
   const rx = useSpring(useMotionValue(0), { stiffness: 200, damping: 20 });

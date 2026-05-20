@@ -5,67 +5,12 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
+import { portfolio } from "@/lib/content";
+import { RichText } from "@/lib/richText";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
-
-const projects = [
-  {
-    n: "01",
-    title: "Lumen / Brand Universe",
-    client: "Lumen Aerospace",
-    year: "2026",
-    discipline: "Identity · Web · Film",
-    gradient: "from-bluepulse via-cyanglow to-violet",
-    accent: "rgba(125,249,255,0.55)",
-  },
-  {
-    n: "02",
-    title: "Nightglass — Album Site",
-    client: "Akari Studio",
-    year: "2026",
-    discipline: "WebGL · Direction",
-    gradient: "from-violet via-bluepulse to-cyanglow",
-    accent: "rgba(139,92,246,0.55)",
-  },
-  {
-    n: "03",
-    title: "ORB / Mobility Identity",
-    client: "ORB Mobility",
-    year: "2025",
-    discipline: "Brand · Motion",
-    gradient: "from-cyanglow via-bluepulse to-violet",
-    accent: "rgba(59,130,246,0.55)",
-  },
-  {
-    n: "04",
-    title: "Atlas — Spatial Campaign",
-    client: "Atlas & Co.",
-    year: "2025",
-    discipline: "Campaign · 3D",
-    gradient: "from-bluepulse via-violet to-cyanglow",
-    accent: "rgba(125,249,255,0.5)",
-  },
-  {
-    n: "05",
-    title: "Form / Generative System",
-    client: "Form Type Foundry",
-    year: "2024",
-    discipline: "Creative Dev · Tools",
-    gradient: "from-violet via-cyanglow to-bluepulse",
-    accent: "rgba(139,92,246,0.5)",
-  },
-  {
-    n: "06",
-    title: "Arc — Studio Reel",
-    client: "JAS Studios",
-    year: "2024",
-    discipline: "Direction · Edit · Score",
-    gradient: "from-cyanglow via-violet to-bluepulse",
-    accent: "rgba(125,249,255,0.55)",
-  },
-];
 
 export default function Portfolio() {
   const sectionRef = useRef(null);
@@ -131,17 +76,17 @@ export default function Portfolio() {
               <div className="mb-6 flex items-center gap-3">
                 <span className="h-px w-12 bg-cyanglow" />
                 <span className="text-xs uppercase tracking-[0.5em] text-cyanglow">
-                  03 — Selected Work
+                  {portfolio.sectionNumber} — {portfolio.sectionLabel}
                 </span>
               </div>
               <h2 className="font-display text-5xl font-medium leading-[0.95] tracking-ultratight md:text-7xl">
-                Cinematic chapters,<br />
-                <span className="text-stroke">scrolled into reality.</span>
+                {portfolio.heading.line1}
+                <br />
+                <RichText text={portfolio.heading.line2Rich} />
               </h2>
             </div>
             <span className="font-cabinet text-sm text-white/45 md:max-w-xs">
-              Drag → scroll horizontally to step through six recent films &
-              experiences.
+              {portfolio.hint}
             </span>
           </div>
         </div>
@@ -155,30 +100,28 @@ export default function Portfolio() {
             ref={trackRef}
             className="absolute left-0 top-0 flex h-full items-center gap-8 pl-[5vw] pr-[10vw] will-change-transform"
           >
-            {projects.map((p, i) => (
+            {portfolio.projects.map((p, i) => (
               <ProjectCard key={p.n} index={i} {...p} />
             ))}
 
             {/* End slab */}
             <div className="flex h-[78vh] w-[30vw] min-w-[420px] flex-col justify-between rounded-3xl border border-white/10 bg-white/[0.02] p-8 backdrop-blur-md md:p-10">
               <span className="text-xs uppercase tracking-[0.4em] text-white/45">
-                Archive
+                {portfolio.endSlab.eyebrow}
               </span>
               <div>
                 <h3 className="font-display text-4xl font-medium tracking-tight text-white md:text-5xl">
-                  + 60<span className="text-cyanglow">.</span> case studies in
-                  the vault.
+                  {portfolio.endSlab.title}
                 </h3>
                 <p className="mt-3 max-w-sm font-cabinet text-sm leading-relaxed text-white/55">
-                  Request the full archive — branded films, type systems,
-                  generative tools and live experiences.
+                  {portfolio.endSlab.body}
                 </p>
                 <a
-                  href="#contact"
+                  href={portfolio.endSlab.cta.href}
                   data-cursor="hover"
                   className="mt-8 inline-flex items-center gap-2 rounded-full border border-cyanglow/40 bg-cyanglow/10 px-5 py-3 text-sm font-medium hover:bg-cyanglow/20"
                 >
-                  Request Archive
+                  {portfolio.endSlab.cta.label}
                   <ArrowUpRight className="h-4 w-4" />
                 </a>
               </div>
@@ -194,7 +137,7 @@ export default function Portfolio() {
   );
 }
 
-function ProjectCard({ n, title, client, year, discipline, gradient, accent }) {
+function ProjectCard({ n, title, client, year, discipline, gradient, accent, href }) {
   return (
     <motion.article
       whileHover={{ y: -8 }}
@@ -216,6 +159,16 @@ function ProjectCard({ n, title, client, year, discipline, gradient, accent }) {
         className="pointer-events-none absolute inset-0 opacity-0 blur-3xl transition-opacity duration-700 group-hover:opacity-100"
         style={{ background: `radial-gradient(circle at 50% 100%, ${accent}, transparent 60%)` }}
       />
+
+      {/* Anchor for click — covers entire card */}
+      {href && (
+        <a
+          href={href}
+          aria-label={title}
+          className="absolute inset-0 z-20"
+          data-cursor="view"
+        />
+      )}
 
       {/* Content */}
       <div className="relative z-10 flex w-full flex-col justify-between p-8 md:p-12">

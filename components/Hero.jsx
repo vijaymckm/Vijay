@@ -4,8 +4,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { Play, ArrowRight, MoveDown } from "lucide-react";
 import MagneticButton from "./MagneticButton";
-
-const headline = ["WE BUILD", "IMMERSIVE", "DIGITAL", "EXPERIENCES"];
+import { hero } from "@/lib/content";
 
 export default function Hero() {
   const ref = useRef(null);
@@ -78,15 +77,18 @@ export default function Hero() {
             <span className="relative h-2 w-2 rounded-full bg-cyanglow" />
           </span>
           <span className="text-xs uppercase tracking-[0.4em] text-white/60">
-            Studio open / 2026 — booking now
+            {hero.statusBadge}
           </span>
         </div>
         <div className="hidden items-center gap-3 text-xs uppercase tracking-[0.4em] text-white/40 md:flex">
-          <span>Mumbai</span>
-          <span className="h-px w-6 bg-white/20" />
-          <span>Berlin</span>
-          <span className="h-px w-6 bg-white/20" />
-          <span>NYC</span>
+          {hero.cities.map((c, i) => (
+            <span key={c} className="flex items-center gap-3">
+              <span>{c}</span>
+              {i < hero.cities.length - 1 && (
+                <span className="h-px w-6 bg-white/20" />
+              )}
+            </span>
+          ))}
         </div>
       </motion.div>
 
@@ -96,7 +98,7 @@ export default function Hero() {
         className="relative z-10 mx-auto w-full max-w-[1480px] px-6 md:px-10"
       >
         <h1 className="font-display font-medium leading-[0.86] tracking-ultratight">
-          {headline.map((line, i) => (
+          {hero.headline.map((line, i) => (
             <LineReveal key={i} delay={1.2 + i * 0.12}>
               <span
                 className={`block text-[18vw] sm:text-[16vw] md:text-[12.5vw] ${
@@ -121,20 +123,18 @@ export default function Hero() {
           className="mt-12 grid grid-cols-1 gap-10 md:mt-16 md:grid-cols-12"
         >
           <p className="font-cabinet text-base leading-relaxed text-white/70 md:col-span-5 md:text-lg">
-            JAS Studios creates cinematic branding, interactive websites, motion
-            graphics, digital campaigns, and futuristic visual systems for
-            ambitious brands and category-defining companies.
+            {hero.lead}
           </p>
 
           <div className="flex flex-wrap items-center gap-4 md:col-span-5 md:col-start-8">
             <MagneticButton
               as="a"
-              href="#contact"
+              href={hero.primaryCta.href}
               data-cursor="hover"
               className="text-base"
             >
               <span className="group inline-flex items-center gap-3 rounded-full bg-white px-7 py-4 font-display font-medium text-black transition-all hover:shadow-[0_0_50px_rgba(255,255,255,0.45)]">
-                Start Project
+                {hero.primaryCta.label}
                 <span className="flex h-7 w-7 items-center justify-center rounded-full bg-black text-white transition-transform group-hover:rotate-45">
                   <ArrowRight className="h-4 w-4" />
                 </span>
@@ -143,7 +143,7 @@ export default function Hero() {
 
             <MagneticButton
               as="a"
-              href="#showreel"
+              href={hero.secondaryCta.href}
               data-cursor="play"
               className="text-base"
             >
@@ -151,7 +151,7 @@ export default function Hero() {
                 <span className="flex h-7 w-7 items-center justify-center rounded-full border border-white/30 bg-white/5">
                   <Play className="h-3.5 w-3.5 fill-white" />
                 </span>
-                View Showreel
+                {hero.secondaryCta.label}
               </span>
             </MagneticButton>
           </div>
@@ -173,12 +173,17 @@ export default function Hero() {
           >
             <MoveDown className="h-4 w-4 text-white/70" />
           </motion.span>
-          Scroll to explore
+          {hero.scrollLabel}
         </div>
         <div className="hidden items-center gap-6 text-xs uppercase tracking-[0.4em] text-white/40 md:flex">
-          <span>Reel ’26</span>
-          <span className="h-px w-12 bg-white/20" />
-          <span>Awwwards SOTD ×4</span>
+          {hero.awards.map((a, i) => (
+            <span key={a} className="flex items-center gap-6">
+              <span>{a}</span>
+              {i < hero.awards.length - 1 && (
+                <span className="h-px w-12 bg-white/20" />
+              )}
+            </span>
+          ))}
         </div>
       </motion.div>
     </section>

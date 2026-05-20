@@ -2,19 +2,11 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowUpRight, Mail, MapPin, Phone } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import MagneticButton from "./MagneticButton";
-
-const services = [
-  "Branding",
-  "Web Design",
-  "Motion Graphics",
-  "Digital Marketing",
-  "Creative Dev",
-  "Studio Rental",
-];
-
-const budgets = ["< $25k", "$25–75k", "$75–150k", "$150k+"];
+import { contact } from "@/lib/content";
+import { RichText } from "@/lib/richText";
+import { getIcon } from "@/lib/icons";
 
 export default function Contact() {
   const [form, setForm] = useState({
@@ -23,8 +15,8 @@ export default function Contact() {
     company: "",
     message: "",
   });
-  const [picked, setPicked] = useState(["Web Design"]);
-  const [budget, setBudget] = useState("$75–150k");
+  const [picked, setPicked] = useState([contact.defaultPickedService]);
+  const [budget, setBudget] = useState(contact.defaultBudget);
   const [submitted, setSubmitted] = useState(false);
 
   const togglePick = (s) =>
@@ -34,7 +26,7 @@ export default function Contact() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    // Demo only — no backend wired
+    // Demo only — wire up to your backend (e.g. Resend, Formspree, custom API)
     setSubmitted(true);
   };
 
@@ -57,41 +49,33 @@ export default function Contact() {
             <div className="mb-6 flex items-center gap-3">
               <span className="h-px w-12 bg-cyanglow" />
               <span className="text-xs uppercase tracking-[0.5em] text-cyanglow">
-                06 — Let’s Build
+                {contact.sectionNumber} — {contact.sectionLabel}
               </span>
             </div>
             <h2 className="font-display text-6xl font-medium leading-[0.92] tracking-ultratight md:text-[8vw]">
-              Have a vision <br />
-              worth <span className="gradient-text italic">choreographing?</span>
+              {contact.heading.line1} <br />
+              <RichText text={contact.heading.line2Rich} />
             </h2>
           </div>
           <div className="md:col-span-4 md:col-start-9">
             <p className="font-cabinet text-base leading-relaxed text-white/60 md:text-lg">
-              We take on a small handful of partners each season. Tell us
-              what you’re building, and we’ll write back within 48 hours.
+              {contact.description}
             </p>
             <div className="mt-8 flex flex-col gap-3 font-cabinet text-sm">
-              <Contactline
-                icon={Mail}
-                label="hello@jasstudios.co"
-                href="mailto:hello@jasstudios.co"
-              />
-              <Contactline
-                icon={Phone}
-                label="+91 22 0000 0000"
-                href="tel:+912200000000"
-              />
-              <Contactline
-                icon={MapPin}
-                label="Mumbai · Berlin · NYC"
-              />
+              {contact.contactLines.map((line) => (
+                <Contactline
+                  key={line.label}
+                  icon={line.icon}
+                  label={line.label}
+                  href={line.href}
+                />
+              ))}
             </div>
           </div>
         </div>
 
         {/* Form */}
         <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.025] p-6 backdrop-blur-2xl md:p-12">
-          {/* glass corners */}
           <div className="pointer-events-none absolute -left-24 -top-24 h-64 w-64 rounded-full bg-cyanglow/20 blur-3xl" />
           <div className="pointer-events-none absolute -right-24 -bottom-24 h-64 w-64 rounded-full bg-violet/20 blur-3xl" />
 
@@ -100,40 +84,40 @@ export default function Contact() {
               <div className="md:col-span-7">
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                   <Field
-                    label="Your name"
+                    label={contact.formLabels.name}
                     value={form.name}
                     onChange={(v) => setForm({ ...form, name: v })}
-                    placeholder="Jane Doe"
+                    placeholder={contact.formLabels.namePlaceholder}
                   />
                   <Field
-                    label="Email"
+                    label={contact.formLabels.email}
                     type="email"
                     value={form.email}
                     onChange={(v) => setForm({ ...form, email: v })}
-                    placeholder="jane@brand.co"
+                    placeholder={contact.formLabels.emailPlaceholder}
                   />
                   <Field
-                    label="Company"
+                    label={contact.formLabels.company}
                     value={form.company}
                     onChange={(v) => setForm({ ...form, company: v })}
-                    placeholder="Acme, Inc."
+                    placeholder={contact.formLabels.companyPlaceholder}
                     full
                   />
                   <FieldArea
-                    label="Tell us about your project"
+                    label={contact.formLabels.message}
                     value={form.message}
                     onChange={(v) => setForm({ ...form, message: v })}
-                    placeholder="We’re launching a new mobility brand and need a full identity + cinematic site for the season-one drop…"
+                    placeholder={contact.formLabels.messagePlaceholder}
                   />
                 </div>
               </div>
 
               <div className="md:col-span-5">
                 <div className="mb-3 text-xs uppercase tracking-[0.3em] text-white/50">
-                  What do you need?
+                  {contact.formLabels.needsHeading}
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {services.map((s) => {
+                  {contact.serviceOptions.map((s) => {
                     const active = picked.includes(s);
                     return (
                       <button
@@ -154,10 +138,10 @@ export default function Contact() {
                 </div>
 
                 <div className="mt-8 mb-3 text-xs uppercase tracking-[0.3em] text-white/50">
-                  Budget
+                  {contact.formLabels.budgetHeading}
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {budgets.map((b) => (
+                  {contact.budgetOptions.map((b) => (
                     <button
                       key={b}
                       type="button"
@@ -176,7 +160,7 @@ export default function Contact() {
 
                 <div className="mt-12 flex items-center justify-between">
                   <span className="text-xs uppercase tracking-[0.3em] text-white/40">
-                    All fields optional · we read every brief
+                    {contact.formLabels.optionalNote}
                   </span>
                 </div>
               </div>
@@ -184,7 +168,7 @@ export default function Contact() {
               <div className="md:col-span-12">
                 <div className="mt-4 flex flex-col items-start justify-between gap-6 border-t border-white/10 pt-8 md:flex-row md:items-center">
                   <span className="font-cabinet text-xs uppercase tracking-[0.3em] text-white/45">
-                    By submitting you agree to our gentle, non-spammy reply.
+                    {contact.privacyNote}
                   </span>
                   <MagneticButton
                     as="button"
@@ -193,7 +177,7 @@ export default function Contact() {
                     className="text-base"
                   >
                     <span className="group inline-flex items-center gap-3 rounded-full bg-white px-7 py-4 font-display font-medium text-black transition-all hover:shadow-[0_0_50px_rgba(255,255,255,0.45)]">
-                      Send Brief
+                      {contact.submitLabel}
                       <span className="flex h-7 w-7 items-center justify-center rounded-full bg-black text-white transition-transform group-hover:rotate-45">
                         <ArrowUpRight className="h-4 w-4" />
                       </span>
@@ -213,11 +197,10 @@ export default function Contact() {
                 <ArrowUpRight className="h-7 w-7 text-cyanglow" />
               </span>
               <h3 className="font-display text-4xl font-medium tracking-tight md:text-5xl">
-                Brief received.
+                {contact.successHeading}
               </h3>
               <p className="max-w-md font-cabinet text-base text-white/60">
-                We’ll be in touch within 48 hours. In the meantime, hit play
-                on the showreel — it’s the best way to know us.
+                {contact.successBody}
               </p>
             </motion.div>
           )}
@@ -291,7 +274,8 @@ function FieldArea({ label, value, onChange, placeholder }) {
   );
 }
 
-function Contactline({ icon: Icon, label, href }) {
+function Contactline({ icon, label, href }) {
+  const Icon = getIcon(icon);
   const Wrapper = href ? "a" : "div";
   return (
     <Wrapper
