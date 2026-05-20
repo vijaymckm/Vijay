@@ -1,0 +1,403 @@
+{
+  "_README": "Real-shape examples of WhatsApp Cloud API webhook payloads (v25.0). Use these to test the workflow without hitting Meta. Replace 'PHONE_NUMBER_ID' / 'WABA_ID' / phone numbers with your own values when replaying. Top-level keys are scenario names; the object under each is the JSON body Meta would POST to your webhook. Use them with: curl -X POST <test-webhook-url> -H 'Content-Type: application/json' -d \"$(jq '.SCENARIO_NAME' samples/sample-payloads.json)\"",
+
+  "text_message_hi": {
+    "object": "whatsapp_business_account",
+    "entry": [
+      {
+        "id": "WABA_ID",
+        "changes": [
+          {
+            "field": "messages",
+            "value": {
+              "messaging_product": "whatsapp",
+              "metadata": {
+                "display_phone_number": "15550199999",
+                "phone_number_id": "PHONE_NUMBER_ID"
+              },
+              "contacts": [
+                {
+                  "profile": { "name": "Vijay McKenna" },
+                  "wa_id": "919876543210"
+                }
+              ],
+              "messages": [
+                {
+                  "from": "919876543210",
+                  "id": "wamid.HBgMOTE5ODc2NTQzMjEwFQIAEhggMzREN0Y3RkE0NTI3RkRBQzlGAA==",
+                  "timestamp": "1747740000",
+                  "type": "text",
+                  "text": { "body": "hi" }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+
+  "text_message_service_choice": {
+    "object": "whatsapp_business_account",
+    "entry": [
+      {
+        "id": "WABA_ID",
+        "changes": [
+          {
+            "field": "messages",
+            "value": {
+              "messaging_product": "whatsapp",
+              "metadata": {
+                "display_phone_number": "15550199999",
+                "phone_number_id": "PHONE_NUMBER_ID"
+              },
+              "contacts": [{ "profile": { "name": "Vijay McKenna" }, "wa_id": "919876543210" }],
+              "messages": [
+                {
+                  "from": "919876543210",
+                  "id": "wamid.HBgMOTE5ODc2NTQzMjEwFQIAEhggMzREN0Y3RkE0NTI3RkRBQzlGAB==",
+                  "timestamp": "1747740060",
+                  "type": "text",
+                  "text": { "body": "2" }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+
+  "image_upload": {
+    "object": "whatsapp_business_account",
+    "entry": [
+      {
+        "id": "WABA_ID",
+        "changes": [
+          {
+            "field": "messages",
+            "value": {
+              "messaging_product": "whatsapp",
+              "metadata": {
+                "display_phone_number": "15550199999",
+                "phone_number_id": "PHONE_NUMBER_ID"
+              },
+              "contacts": [{ "profile": { "name": "Vijay McKenna" }, "wa_id": "919876543210" }],
+              "messages": [
+                {
+                  "from": "919876543210",
+                  "id": "wamid.HBgMOTE5ODc2NTQzMjEwFQIAEhggMzREN0Y3RkE0NTI3RkRBQzlGAC==",
+                  "timestamp": "1747740120",
+                  "type": "image",
+                  "image": {
+                    "id": "1234567890123456",
+                    "mime_type": "image/jpeg",
+                    "sha256": "abcd1234...",
+                    "caption": "logo reference"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+
+  "document_upload_pdf": {
+    "object": "whatsapp_business_account",
+    "entry": [
+      {
+        "id": "WABA_ID",
+        "changes": [
+          {
+            "field": "messages",
+            "value": {
+              "messaging_product": "whatsapp",
+              "metadata": {
+                "display_phone_number": "15550199999",
+                "phone_number_id": "PHONE_NUMBER_ID"
+              },
+              "contacts": [{ "profile": { "name": "Vijay McKenna" }, "wa_id": "919876543210" }],
+              "messages": [
+                {
+                  "from": "919876543210",
+                  "id": "wamid.HBgMOTE5ODc2NTQzMjEwFQIAEhggMzREN0Y3RkE0NTI3RkRBQzlGAD==",
+                  "timestamp": "1747740180",
+                  "type": "document",
+                  "document": {
+                    "id": "9876543210987654",
+                    "mime_type": "application/pdf",
+                    "sha256": "def56789...",
+                    "filename": "brand-brief.pdf",
+                    "caption": "current brand guidelines"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+
+  "interactive_button_reply": {
+    "_note": "What you'd receive if you used a List/Buttons template instead of plain text for the menu",
+    "object": "whatsapp_business_account",
+    "entry": [
+      {
+        "id": "WABA_ID",
+        "changes": [
+          {
+            "field": "messages",
+            "value": {
+              "messaging_product": "whatsapp",
+              "metadata": {
+                "display_phone_number": "15550199999",
+                "phone_number_id": "PHONE_NUMBER_ID"
+              },
+              "contacts": [{ "profile": { "name": "Vijay McKenna" }, "wa_id": "919876543210" }],
+              "messages": [
+                {
+                  "from": "919876543210",
+                  "id": "wamid.HBgMOTE5ODc2NTQzMjEwFQIAEhggMzREN0Y3RkE0NTI3RkRBQzlGAE==",
+                  "timestamp": "1747740240",
+                  "type": "interactive",
+                  "interactive": {
+                    "type": "button_reply",
+                    "button_reply": {
+                      "id": "service_branding",
+                      "title": "Branding"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+
+  "status_delivered": {
+    "_note": "Sent automatically by Meta after every outbound message reaches the user. Should NOT trigger a bot reply. Workflow short-circuits at IF isMessage -> false -> Respond 200.",
+    "object": "whatsapp_business_account",
+    "entry": [
+      {
+        "id": "WABA_ID",
+        "changes": [
+          {
+            "field": "messages",
+            "value": {
+              "messaging_product": "whatsapp",
+              "metadata": {
+                "display_phone_number": "15550199999",
+                "phone_number_id": "PHONE_NUMBER_ID"
+              },
+              "statuses": [
+                {
+                  "id": "wamid.HBgMOTE5ODc2NTQzMjEwFQIAEhggMzREN0Y3RkE0NTI3RkRBQzlGAF==",
+                  "status": "delivered",
+                  "timestamp": "1747740300",
+                  "recipient_id": "919876543210",
+                  "conversation": {
+                    "id": "conv_abc123",
+                    "origin": { "type": "user_initiated" }
+                  },
+                  "pricing": {
+                    "billable": true,
+                    "pricing_model": "CBP",
+                    "category": "user_initiated"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+
+  "status_read": {
+    "_note": "User opened the message. Same handling as delivered — short-circuit, no bot reply.",
+    "object": "whatsapp_business_account",
+    "entry": [
+      {
+        "id": "WABA_ID",
+        "changes": [
+          {
+            "field": "messages",
+            "value": {
+              "messaging_product": "whatsapp",
+              "metadata": {
+                "display_phone_number": "15550199999",
+                "phone_number_id": "PHONE_NUMBER_ID"
+              },
+              "statuses": [
+                {
+                  "id": "wamid.HBgMOTE5ODc2NTQzMjEwFQIAEhggMzREN0Y3RkE0NTI3RkRBQzlGAG==",
+                  "status": "read",
+                  "timestamp": "1747740360",
+                  "recipient_id": "919876543210"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+
+  "status_sent": {
+    "_note": "Fired immediately after the bot's reply leaves Meta's servers, before delivery.",
+    "object": "whatsapp_business_account",
+    "entry": [
+      {
+        "id": "WABA_ID",
+        "changes": [
+          {
+            "field": "messages",
+            "value": {
+              "messaging_product": "whatsapp",
+              "metadata": {
+                "display_phone_number": "15550199999",
+                "phone_number_id": "PHONE_NUMBER_ID"
+              },
+              "statuses": [
+                {
+                  "id": "wamid.HBgMOTE5ODc2NTQzMjEwFQIAEhggMzREN0Y3RkE0NTI3RkRBQzlGAH==",
+                  "status": "sent",
+                  "timestamp": "1747740250",
+                  "recipient_id": "919876543210"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+
+  "status_failed": {
+    "_note": "User blocked the bot, or opted out, or 24-hour window expired and you sent a non-template message. Worth logging — consider adding a Code branch to mark the Sessions row as 'BLOCKED'.",
+    "object": "whatsapp_business_account",
+    "entry": [
+      {
+        "id": "WABA_ID",
+        "changes": [
+          {
+            "field": "messages",
+            "value": {
+              "messaging_product": "whatsapp",
+              "metadata": {
+                "display_phone_number": "15550199999",
+                "phone_number_id": "PHONE_NUMBER_ID"
+              },
+              "statuses": [
+                {
+                  "id": "wamid.HBgMOTE5ODc2NTQzMjEwFQIAEhggMzREN0Y3RkE0NTI3RkRBQzlGAI==",
+                  "status": "failed",
+                  "timestamp": "1747740400",
+                  "recipient_id": "919876543210",
+                  "errors": [
+                    {
+                      "code": 131047,
+                      "title": "Re-engagement message",
+                      "message": "More than 24 hours have passed since the recipient last replied to the sender number.",
+                      "error_data": { "details": "..." }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+
+  "empty_event": {
+    "_note": "Some test webhooks Meta sends — bare entry with no value. Workflow's defensive parsing handles this gracefully.",
+    "object": "whatsapp_business_account",
+    "entry": [
+      {
+        "id": "WABA_ID",
+        "changes": [{ "field": "messages", "value": { "messaging_product": "whatsapp" } }]
+      }
+    ]
+  },
+
+  "completely_empty_body": {
+    "_note": "Curl an empty {} to your webhook. Workflow returns 200 OK and does nothing.",
+    "_payload": {}
+  },
+
+  "voice_note_unsupported": {
+    "_note": "WhatsApp lets users send voice notes. The bot doesn't handle them yet (audio is treated as media, downloaded, but the State Machine has no transcription step). Useful for testing graceful handling.",
+    "object": "whatsapp_business_account",
+    "entry": [
+      {
+        "id": "WABA_ID",
+        "changes": [
+          {
+            "field": "messages",
+            "value": {
+              "messaging_product": "whatsapp",
+              "metadata": {
+                "display_phone_number": "15550199999",
+                "phone_number_id": "PHONE_NUMBER_ID"
+              },
+              "contacts": [{ "profile": { "name": "Vijay McKenna" }, "wa_id": "919876543210" }],
+              "messages": [
+                {
+                  "from": "919876543210",
+                  "id": "wamid.HBgMOTE5ODc2NTQzMjEwFQIAEhggMzREN0Y3RkE0NTI3RkRBQzlGAJ==",
+                  "timestamp": "1747740500",
+                  "type": "audio",
+                  "audio": {
+                    "id": "5555555555555555",
+                    "mime_type": "audio/ogg; codecs=opus",
+                    "sha256": "voice...",
+                    "voice": true
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+
+  "human_handoff_request": {
+    "_note": "User typing 'human' triggers the HUMAN handoff branch.",
+    "object": "whatsapp_business_account",
+    "entry": [
+      {
+        "id": "WABA_ID",
+        "changes": [
+          {
+            "field": "messages",
+            "value": {
+              "messaging_product": "whatsapp",
+              "metadata": {
+                "display_phone_number": "15550199999",
+                "phone_number_id": "PHONE_NUMBER_ID"
+              },
+              "contacts": [{ "profile": { "name": "Vijay McKenna" }, "wa_id": "919876543210" }],
+              "messages": [
+                {
+                  "from": "919876543210",
+                  "id": "wamid.HBgMOTE5ODc2NTQzMjEwFQIAEhggMzREN0Y3RkE0NTI3RkRBQzlGAK==",
+                  "timestamp": "1747740600",
+                  "type": "text",
+                  "text": { "body": "human" }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
