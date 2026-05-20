@@ -4,12 +4,12 @@ import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Play } from "lucide-react";
+import { showreel } from "@/lib/content";
+import { RichText } from "@/lib/richText";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
-
-const lines = ["A FILM", "ABOUT", "MOTION,", "MEANING,", "AND", "MEMORY."];
 
 export default function Showreel() {
   const sectionRef = useRef(null);
@@ -91,19 +91,20 @@ export default function Showreel() {
             <div className="mb-6 flex items-center gap-3">
               <span className="h-px w-12 bg-cyanglow" />
               <span className="text-xs uppercase tracking-[0.5em] text-cyanglow">
-                04 — Showreel ’26
+                {showreel.sectionNumber} — {showreel.sectionLabel}
               </span>
             </div>
             <h2 className="font-display text-5xl font-medium leading-[0.95] tracking-ultratight md:text-7xl">
-              Press <span className="gradient-text italic">play</span>
+              {showreel.heading.prefix}
+              <RichText text={showreel.heading.suffixRich} />
             </h2>
           </div>
           <div className="hidden text-right md:block">
             <div className="font-cabinet text-xs uppercase tracking-[0.3em] text-white/50">
-              Director · J. A. Saxena
+              {showreel.director}
             </div>
             <div className="mt-1 font-cabinet text-xs uppercase tracking-[0.3em] text-white/30">
-              02:48 / 4K / Dolby Atmos
+              {showreel.spec}
             </div>
           </div>
         </div>
@@ -133,24 +134,24 @@ export default function Showreel() {
               <div className="flex items-center gap-2 rounded-full border border-white/30 bg-black/30 px-3 py-1.5 backdrop-blur-md">
                 <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-red-500" />
                 <span className="text-[10px] uppercase tracking-[0.3em] text-white/85">
-                  Rec · 4K · 24fps
+                  {showreel.recBadge}
                 </span>
               </div>
               <div className="font-cabinet text-[10px] uppercase tracking-[0.3em] text-white/70">
-                JAS / Reel ’26
+                {showreel.cornerLabel}
               </div>
             </div>
 
             <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between p-6 md:p-10">
               <div className="font-cabinet text-[10px] uppercase tracking-[0.3em] text-white/65">
-                Frame 00:01:24:08
+                {showreel.timecode}
               </div>
               <div className="hidden font-cabinet text-[10px] uppercase tracking-[0.3em] text-white/65 md:block">
-                Lat 19.0760° N · Lon 72.8777° E
+                {showreel.geo}
               </div>
             </div>
 
-            {/* Center play button (magnetic feel) */}
+            {/* Center play button */}
             <button
               type="button"
               data-cursor="play"
@@ -161,13 +162,13 @@ export default function Showreel() {
                 <Play className="h-10 w-10 fill-white text-white transition-transform group-hover:scale-110 md:h-12 md:w-12" />
               </span>
               <span className="font-cabinet text-xs uppercase tracking-[0.4em] text-white/85">
-                Play Showreel
+                {showreel.playLabel}
               </span>
             </button>
 
             {/* Cinematic typography overlay */}
             <div className="pointer-events-none absolute inset-x-0 bottom-12 flex flex-col px-6 md:bottom-24 md:px-12">
-              {lines.map((line, i) => (
+              {showreel.overlayLines.map((line, i) => (
                 <div key={i} className="showreel-line overflow-hidden">
                   <span
                     className={`showreel-line-inner block font-display text-6xl font-medium leading-[0.95] tracking-ultratight md:text-[9vw] ${

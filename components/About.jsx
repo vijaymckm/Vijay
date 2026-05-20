@@ -2,36 +2,15 @@
 
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { about } from "@/lib/content";
+import { RichText } from "@/lib/richText";
 
-const stats = [
-  { value: 184, suffix: "+", label: "Projects Shipped" },
-  { value: 42, suffix: "+", label: "Awwwards Earned" },
-  { value: 23, suffix: "", label: "Industries Served" },
-  { value: 9, suffix: "yrs", label: "Of Visual R&D" },
-];
-
-const timeline = [
-  {
-    year: "2017",
-    title: "Founded as a 3-person motion lab",
-    body: "We started as an experimental film + design unit obsessed with cinematic storytelling on the web.",
-  },
-  {
-    year: "2020",
-    title: "Pivot to interactive systems",
-    body: "We rebuilt our craft around WebGL, shaders, and choreography-first development.",
-  },
-  {
-    year: "2023",
-    title: "Global studio network",
-    body: "Three studios across continents, one creative philosophy: every pixel must move with intention.",
-  },
-  {
-    year: "2026",
-    title: "JAS Immersive Lab",
-    body: "Now operating as a full-stack creative lab building branded universes, not pages.",
-  },
-];
+const positionClasses = {
+  tl: "left-6 top-6",
+  tr: "right-6 top-6",
+  bl: "left-6 bottom-24",
+  br: "right-6 bottom-6",
+};
 
 export default function About() {
   const sectionRef = useRef(null);
@@ -59,11 +38,11 @@ export default function About() {
           <div className="flex items-center gap-3">
             <span className="h-px w-12 bg-cyanglow" />
             <span className="text-xs uppercase tracking-[0.5em] text-cyanglow">
-              01 — The Studio
+              {about.sectionNumber} — {about.sectionLabel}
             </span>
           </div>
           <span className="font-cabinet text-sm text-white/50">
-            Est. 2017 / Mumbai · Berlin · NYC
+            {about.meta}
           </span>
         </motion.div>
 
@@ -84,33 +63,22 @@ export default function About() {
               <div className="absolute inset-0 noise-layer opacity-30" />
 
               {/* Floating cards over visual */}
-              <FloatingCard
-                className="left-6 top-6"
-                title="Live Render"
-                value="GPU 60fps"
-                accent="cyanglow"
-                delay={0.1}
-              />
-              <FloatingCard
-                className="right-6 bottom-6"
-                title="Shader Engine"
-                value="GLSL · WebGL2"
-                accent="bluepulse"
-                delay={0.25}
-              />
-              <FloatingCard
-                className="left-6 bottom-24"
-                title="Studio Status"
-                value="In session"
-                accent="violet"
-                delay={0.4}
-              />
+              {about.floatingCards.map((card, i) => (
+                <FloatingCard
+                  key={card.title}
+                  className={positionClasses[card.position] || "left-6 top-6"}
+                  title={card.title}
+                  value={card.value}
+                  accent={card.accent}
+                  delay={0.1 + i * 0.15}
+                />
+              ))}
 
               {/* HUD label */}
               <div className="absolute bottom-6 right-6 flex items-center gap-2 rounded-full border border-white/15 bg-black/40 px-3 py-1.5 backdrop-blur-md">
                 <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-cyanglow" />
                 <span className="text-[10px] uppercase tracking-[0.3em] text-white/70">
-                  Rec · Studio Live
+                  {about.liveBadge}
                 </span>
               </div>
             </div>
@@ -120,22 +88,19 @@ export default function About() {
           <div className="md:col-span-6 md:pl-6">
             <Reveal>
               <h2 className="font-display text-5xl font-medium leading-[0.95] tracking-ultratight text-white md:text-7xl">
-                A studio that designs <span className="gradient-text italic">light</span>, motion, and meaning — into digital matter.
+                <RichText text={about.heading.rich} />
               </h2>
             </Reveal>
 
             <Reveal delay={0.15}>
               <p className="mt-8 max-w-xl font-cabinet text-base leading-relaxed text-white/65 md:text-lg">
-                We are filmmakers, technologists, and designers building
-                cinematic systems for brands that want to be felt — not
-                clicked. Every frame is choreographed. Every scroll is
-                composed. Every interaction is an arc.
+                {about.paragraph}
               </p>
             </Reveal>
 
             {/* Counters */}
             <div className="mt-14 grid grid-cols-2 gap-6 md:gap-8">
-              {stats.map((s, i) => (
+              {about.stats.map((s, i) => (
                 <Counter key={i} {...s} delay={i * 0.1} />
               ))}
             </div>
@@ -149,7 +114,7 @@ export default function About() {
                 </span>
               </div>
               <ol className="relative border-l border-white/10 pl-6">
-                {timeline.map((t, i) => (
+                {about.timeline.map((t, i) => (
                   <TimelineItem key={t.year} index={i} {...t} />
                 ))}
               </ol>
@@ -166,7 +131,7 @@ function FloatingCard({ className = "", title, value, accent, delay = 0 }) {
     cyanglow: "border-cyanglow/40 text-cyanglow",
     bluepulse: "border-bluepulse/40 text-bluepulse",
     violet: "border-violet/40 text-violet",
-  }[accent];
+  }[accent] || "border-cyanglow/40 text-cyanglow";
   return (
     <motion.div
       initial={{ opacity: 0, y: 20, scale: 0.95 }}

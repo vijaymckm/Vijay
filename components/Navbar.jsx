@@ -4,14 +4,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import MagneticButton from "./MagneticButton";
-
-const links = [
-  { label: "Work", href: "#portfolio" },
-  { label: "Studio", href: "#about" },
-  { label: "Services", href: "#services" },
-  { label: "Process", href: "#process" },
-  { label: "Contact", href: "#contact" },
-];
+import { brand, nav } from "@/lib/content";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -54,21 +47,23 @@ export default function Navbar() {
           >
             <span className="relative flex h-9 w-9 items-center justify-center overflow-hidden rounded-full border border-cyanglow/40 bg-gradient-to-br from-bluepulse/40 to-violet/40">
               <span className="absolute inset-0 animate-spin-slow bg-[conic-gradient(from_0deg,transparent_0deg,rgba(125,249,255,0.6)_60deg,transparent_120deg)]" />
-              <span className="relative font-display text-sm font-bold">J</span>
+              <span className="relative font-display text-sm font-bold">
+                {brand.logoMark}
+              </span>
             </span>
             <div className="leading-tight">
               <div className="font-display text-base font-medium tracking-tight">
-                JAS Studios
+                {brand.name}
               </div>
               <div className="text-[10px] uppercase tracking-[0.3em] text-white/40">
-                Creative Lab
+                {brand.kicker}
               </div>
             </div>
           </a>
 
           {/* Desktop links */}
           <div className="hidden items-center gap-1 md:flex">
-            {links.map((l) => (
+            {nav.links.map((l) => (
               <a
                 key={l.href}
                 href={l.href}
@@ -85,12 +80,12 @@ export default function Navbar() {
           <div className="hidden items-center gap-3 md:flex">
             <MagneticButton
               as="a"
-              href="#contact"
+              href={nav.cta.href}
               data-cursor="hover"
               className="text-sm"
             >
               <span className="group inline-flex items-center gap-2 rounded-full border border-cyanglow/40 bg-gradient-to-r from-cyanglow/15 to-bluepulse/15 px-5 py-2.5 font-medium text-white transition-all hover:border-cyanglow/80 hover:shadow-[0_0_30px_rgba(125,249,255,0.35)]">
-                Start Project
+                {nav.cta.label}
                 <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
               </span>
             </MagneticButton>
@@ -103,11 +98,7 @@ export default function Navbar() {
             className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 md:hidden"
             aria-label="Open menu"
           >
-            {open ? (
-              <X className="h-5 w-5" />
-            ) : (
-              <Menu className="h-5 w-5" />
-            )}
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </nav>
       </motion.header>
@@ -123,7 +114,7 @@ export default function Navbar() {
           >
             <div className="absolute inset-0 noise-layer" />
             <div className="relative flex h-full flex-col items-start justify-center gap-6 px-8">
-              {links.map((l, i) => (
+              {nav.links.map((l, i) => (
                 <motion.a
                   key={l.href}
                   href={l.href}
@@ -141,14 +132,14 @@ export default function Navbar() {
                 </motion.a>
               ))}
               <motion.a
-                href="#contact"
+                href={nav.cta.href}
                 onClick={() => setOpen(false)}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.6 }}
                 className="mt-6 inline-flex items-center gap-2 rounded-full border border-cyanglow/40 bg-cyanglow/10 px-5 py-3 text-sm font-medium"
               >
-                Start Project <ArrowUpRight className="h-4 w-4" />
+                {nav.cta.label} <ArrowUpRight className="h-4 w-4" />
               </motion.a>
             </div>
           </motion.div>

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { loader } from "@/lib/content";
 
 export default function Loader() {
   const [progress, setProgress] = useState(0);
@@ -53,7 +54,7 @@ export default function Loader() {
           <div className="relative z-10 flex w-full items-end justify-between font-display">
             <div className="flex flex-col gap-2">
               <span className="text-xs uppercase tracking-[0.5em] text-white/50">
-                JAS Studios
+                {loader.brand}
               </span>
               <motion.span
                 className="text-7xl font-medium leading-none tracking-ultratight text-white md:text-9xl"
@@ -68,10 +69,10 @@ export default function Loader() {
 
             <div className="hidden flex-col items-end gap-3 md:flex">
               <span className="text-xs uppercase tracking-[0.5em] text-white/50">
-                Now Loading
+                {loader.subtitle}
               </span>
               <span className="font-cabinet text-2xl font-medium tracking-tight text-white/80">
-                Immersive Experience
+                {loader.caption}
               </span>
               <div className="h-px w-64 overflow-hidden bg-white/10">
                 <motion.div

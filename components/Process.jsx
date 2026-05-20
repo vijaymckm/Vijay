@@ -2,46 +2,9 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import {
-  Compass,
-  Lightbulb,
-  Pen,
-  Rocket,
-  TrendingUp,
-} from "lucide-react";
-
-const steps = [
-  {
-    icon: Compass,
-    title: "Strategy",
-    sub: "Phase 01",
-    body: "Discovery, audits, narrative architecture and a north-star creative brief.",
-  },
-  {
-    icon: Lightbulb,
-    title: "Creative Direction",
-    sub: "Phase 02",
-    body: "Mood, tone, type, light. We pre-visualize the entire experience as a film.",
-  },
-  {
-    icon: Pen,
-    title: "Design",
-    sub: "Phase 03",
-    body: "High-fidelity systems, motion choreography, prototypes and live shaders.",
-  },
-  {
-    icon: Rocket,
-    title: "Launch",
-    sub: "Phase 04",
-    body: "Production-grade engineering, performance hardening, and a cinematic release.",
-  },
-  {
-    icon: TrendingUp,
-    title: "Scale",
-    sub: "Phase 05",
-    body: "Live optimization, content engines, season drops and continuous evolution.",
-  },
-];
+import { process } from "@/lib/content";
+import { RichText } from "@/lib/richText";
+import { getIcon } from "@/lib/icons";
 
 export default function Process() {
   const ref = useRef(null);
@@ -66,16 +29,15 @@ export default function Process() {
             <div className="mb-6 flex items-center gap-3">
               <span className="h-px w-12 bg-cyanglow" />
               <span className="text-xs uppercase tracking-[0.5em] text-cyanglow">
-                05 — Process
+                {process.sectionNumber} — {process.sectionLabel}
               </span>
             </div>
             <h2 className="font-display text-5xl font-medium leading-[0.95] tracking-ultratight md:text-7xl">
-              A choreography in <span className="gradient-text italic">five</span> movements.
+              <RichText text={process.heading.rich} />
             </h2>
           </div>
           <p className="font-cabinet text-base leading-relaxed text-white/60 md:col-span-4 md:col-start-9 md:text-lg">
-            Every JAS engagement runs through this five-phase system —
-            structured for clarity, designed for surprise.
+            {process.description}
           </p>
         </div>
 
@@ -96,7 +58,7 @@ export default function Process() {
           </motion.div>
 
           <ol className="flex flex-col gap-16 md:gap-32">
-            {steps.map((s, i) => (
+            {process.steps.map((s, i) => (
               <Step key={s.title} index={i} {...s} />
             ))}
           </ol>
@@ -106,8 +68,9 @@ export default function Process() {
   );
 }
 
-function Step({ icon: Icon, title, sub, body, index }) {
+function Step({ icon, title, sub, body, index }) {
   const isLeft = index % 2 === 0;
+  const Icon = getIcon(icon);
 
   return (
     <motion.li

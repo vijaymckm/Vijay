@@ -8,6 +8,9 @@ import Services from "@/components/Services";
 import Portfolio from "@/components/Portfolio";
 import Showreel from "@/components/Showreel";
 import Process from "@/components/Process";
+import Team from "@/components/Team";
+import Pricing from "@/components/Pricing";
+import FAQ from "@/components/FAQ";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import MarqueeBand from "@/components/MarqueeBand";
@@ -41,6 +44,9 @@ export default function Home() {
             <Portfolio />
             <Showreel />
             <Process />
+            <Team />
+            <Pricing />
+            <FAQ />
             <Contact />
           </main>
           <Footer />

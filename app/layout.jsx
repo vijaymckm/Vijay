@@ -1,28 +1,19 @@
 import "./globals.css";
+import { site } from "@/lib/content";
 
 export const metadata = {
-  title: "JAS Studios — Immersive Digital Experiences",
-  description:
-    "JAS Studios is a cinematic creative agency crafting branding, interactive websites, motion graphics, digital campaigns, and futuristic visual systems.",
-  keywords: [
-    "creative agency",
-    "interactive design",
-    "branding",
-    "motion graphics",
-    "JAS Studios",
-    "Awwwards",
-    "cinematic web",
-  ],
+  title: site.title,
+  description: site.description,
+  keywords: site.keywords,
   openGraph: {
-    title: "JAS Studios — Immersive Digital Experiences",
-    description:
-      "Cinematic branding, interactive websites, motion graphics, and futuristic visual systems.",
+    title: site.ogTitle,
+    description: site.ogDescription,
     type: "website",
   },
 };
 
 export const viewport = {
-  themeColor: "#03060d",
+  themeColor: site.themeColor,
   width: "device-width",
   initialScale: 1,
 };
