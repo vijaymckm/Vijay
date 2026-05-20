@@ -1,0 +1,123 @@
+{
+  "name": "JAS Studios — Error Handler",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "err-trigger",
+      "name": "Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [-300, 0]
+    },
+    {
+      "parameters": {
+        "language": "javaScript",
+        "jsCode": "// Normalize the n8n error trigger payload into a flat row we can email + log.\nconst e = $input.first().json || {};\nconst exec = e.execution || {};\nconst err  = e.execution && e.execution.error || {};\nconst lastNode = e.execution && e.execution.lastNodeExecuted || '(unknown)';\nconst wf   = e.workflow || {};\n\nfunction safe(s) { try { return String(s); } catch (_) { return ''; } }\n\nconst row = {\n  occurredAt:  new Date().toISOString(),\n  workflowId:  safe(wf.id),\n  workflowName:safe(wf.name),\n  executionId: safe(exec.id),\n  executionUrl: ($env.N8N_PUBLIC_URL ? `${$env.N8N_PUBLIC_URL}/workflow/${safe(wf.id)}/executions/${safe(exec.id)}` : ''),\n  lastNode:    safe(lastNode),\n  errorName:   safe(err.name || err.constructor && err.constructor.name || 'Error'),\n  errorMessage:safe(err.message || ''),\n  errorStack:  safe((err.stack || '').toString()).slice(0, 4000),\n  mode:        safe(exec.mode || ''),\n  retryOf:     safe(exec.retryOf || '')\n};\n\nreturn [{ json: row }];"
+      },
+      "id": "err-normalize",
+      "name": "Normalize Error",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-80, 0]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "={{$env.LEADS_SHEET_ID}}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Errors",
+          "mode": "name"
+        },
+        "operation": "append",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "occurredAt":   "={{$json.occurredAt}}",
+            "workflowName": "={{$json.workflowName}}",
+            "executionId":  "={{$json.executionId}}",
+            "executionUrl": "={{$json.executionUrl}}",
+            "lastNode":     "={{$json.lastNode}}",
+            "errorName":    "={{$json.errorName}}",
+            "errorMessage": "={{$json.errorMessage}}",
+            "errorStack":   "={{$json.errorStack}}"
+          },
+          "schema": [
+            { "id": "occurredAt",   "displayName": "occurredAt",   "type": "string" },
+            { "id": "workflowName", "displayName": "workflowName", "type": "string" },
+            { "id": "executionId",  "displayName": "executionId",  "type": "string" },
+            { "id": "executionUrl", "displayName": "executionUrl", "type": "string" },
+            { "id": "lastNode",     "displayName": "lastNode",     "type": "string" },
+            { "id": "errorName",    "displayName": "errorName",    "type": "string" },
+            { "id": "errorMessage", "displayName": "errorMessage", "type": "string" },
+            { "id": "errorStack",   "displayName": "errorStack",   "type": "string" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "err-log-sheet",
+      "name": "Log to Sheet (Errors tab)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [180, -100],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "REPLACE_GS_CRED_ID",
+          "name": "Google Sheets account"
+        }
+      },
+      "continueOnFail": true,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "sendTo": "={{$env.ADMIN_EMAIL}}",
+        "subject": "=🚨 [n8n] {{$json.workflowName}} failed at {{$json.lastNode}}",
+        "emailType": "html",
+        "message": "=<h2 style=\"font-family:sans-serif;color:#c00;\">n8n workflow failure</h2>\n<table style=\"font-family:monospace;border-collapse:collapse;\">\n  <tr><td style=\"padding:4px;font-weight:bold\">Workflow</td><td style=\"padding:4px\">{{$json.workflowName}} ({{$json.workflowId}})</td></tr>\n  <tr><td style=\"padding:4px;font-weight:bold\">Execution</td><td style=\"padding:4px\"><a href=\"{{$json.executionUrl}}\">{{$json.executionId}}</a></td></tr>\n  <tr><td style=\"padding:4px;font-weight:bold\">Last node</td><td style=\"padding:4px\">{{$json.lastNode}}</td></tr>\n  <tr><td style=\"padding:4px;font-weight:bold\">Error</td><td style=\"padding:4px\">{{$json.errorName}}: {{$json.errorMessage}}</td></tr>\n</table>\n<h3 style=\"font-family:sans-serif\">Stack</h3>\n<pre style=\"font-family:monospace;background:#f4f4f4;padding:8px;white-space:pre-wrap;\">{{$json.errorStack}}</pre>\n<p style=\"font-family:sans-serif;color:#888\">Sent at {{$now.toISO()}}</p>",
+        "options": {}
+      },
+      "id": "err-email",
+      "name": "Email Admin (alert)",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [180, 100],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "REPLACE_GMAIL_CRED_ID",
+          "name": "Gmail account"
+        }
+      },
+      "continueOnFail": true,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    }
+  ],
+  "connections": {
+    "Error Trigger": {
+      "main": [[{ "node": "Normalize Error", "type": "main", "index": 0 }]]
+    },
+    "Normalize Error": {
+      "main": [[
+        { "node": "Log to Sheet (Errors tab)", "type": "main", "index": 0 },
+        { "node": "Email Admin (alert)",       "type": "main", "index": 0 }
+      ]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "tags": [
+    { "name": "error-handler" },
+    { "name": "production" }
+  ]
+}
